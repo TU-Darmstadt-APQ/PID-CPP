@@ -48,7 +48,7 @@ const uint32_t PID::compute(const uint32_t input) {
     // TODO: Think about taking into account the previous result as well
     // -> Bilinear Transform instead of Backward difference
     // https://en.wikipedia.org/wiki/Bilinear_transform
-    errorSum+ = this->ki * error;
+    errorSum += this->ki * error;
     );
     // Calculate D term (Note: We actually calcualte -dInput)
     // We do not calculate dError, because this would cause an output spike every time someone changes the setpoint
@@ -62,7 +62,7 @@ const uint32_t PID::compute(const uint32_t input) {
     this->previousInput = input;
 
     if (UNLIKELY(proportionalGain == proportionalToInput)) {
-        errorSum+ = this->kp * dInputNegative;
+        errorSum += this->kp * dInputNegative;
     }
 
     // This will prevent integral windup
@@ -72,7 +72,7 @@ const uint32_t PID::compute(const uint32_t input) {
 
     // Normal PID
     if (LIKELY(proportionalGain == proportionalToError)) {
-        output+ = this->kp * error;
+        output += this->kp * error;
     }
 
     output = clamp(output, outputMin, outputMax);

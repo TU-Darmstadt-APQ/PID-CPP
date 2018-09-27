@@ -21,7 +21,7 @@ PID::PID(const uint32_t _setpoint, const double kp, const double ki, const doubl
     this->setTunings(kp, ki, kd, proportionalGain);
 }
 
-PID::PID(const double setpoint, const double kp, const double ki, const double kd, uint8_t qn, FeedbackDirection feedbackDirection)
+PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t qn, FeedbackDirection feedbackDirection)
     :PID::PID(setpoint, kp, ki, kd, qn, feedbackDirection, proportionalToError) {}
 
 PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t qn)

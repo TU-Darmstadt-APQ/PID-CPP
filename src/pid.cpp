@@ -90,7 +90,7 @@ void PID::init(const uint32_t initialInput) {
 }
 
 void PID::updateOutput(const uint32_t value) {
-    this->errorSum = clamp(value, this->outputMin, this->outputMax);
+    this->errorSum = value; //clamp(value, this->outputMin, this->outputMax);
 }
 
 void PID::setControllerFeedback(const FeedbackDirection feedbackDirection) {

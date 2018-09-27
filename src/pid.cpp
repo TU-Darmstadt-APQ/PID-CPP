@@ -43,13 +43,12 @@ const uint32_t PID::compute(const uint32_t input) {
     // Calcualte P term
     // Note: the calculation is (uint32_t)setpoint - (uint32_t)(input) = (int32_t)error (using signed math)
     // This is true for offset binary values!
-    const double error = this->setpoint - input
+    const double error = this->setpoint - input;
     // Calcualte I term
     // TODO: Think about taking into account the previous result as well
     // -> Bilinear Transform instead of Backward difference
     // https://en.wikipedia.org/wiki/Bilinear_transform
     errorSum += this->ki * error;
-    );
     // Calculate D term (Note: We actually calcualte -dInput)
     // We do not calculate dError, because this would cause an output spike every time someone changes the setpoint
     // dError = d(Setpoint - Input)_n - d(Setpoint - Input)_(n-1)

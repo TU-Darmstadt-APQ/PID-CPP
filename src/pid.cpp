@@ -43,10 +43,10 @@ const uint32_t PID::compute(const uint32_t input) {
       /*Compute all the working error variables*/
       double error = (double)this->setpoint - (double)input;
 
-      //this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
+      this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
 
       double output = kp * error + 2048;
-      //output = clamp(output, this->outputMin, this->outputMax);
+      output = clamp(output, this->outputMin, this->outputMax);
 
       /*Remember some variables for next time*/
       return output;
@@ -87,7 +87,7 @@ void PID::init(const uint32_t initialInput) {
 }
 
 void PID::updateOutput(const uint32_t value) {
-    this->errorSum = value; //clamp(value, this->outputMin, this->outputMax);
+    this->errorSum = clamp(value, this->outputMin, this->outputMax);
 }
 
 void PID::setControllerFeedback(const FeedbackDirection feedbackDirection) {

@@ -43,22 +43,20 @@ const uint32_t PID::compute(const uint32_t input) {
       /*Compute all the working error variables*/
       double error = this->setPoint - input;
       double dInput = (input - lastInput);
-      this->errorSum+= (ki * error);
+      this->errorSum += (ki * error);
 
       this->errorSum = clamp(errorSum, outputMin, outputMax);
 
       /*Add Proportional on Error, if P_ON_E is specified*/
-	   double output;
-      output = kp * error;
+      double output = kp * error;
 
       /*Compute Rest of PID Output*/
-      output += outputSum - kd * dInput;
-
-	  output = clamp(output, outputMin, outputMax);
+      output += this->errorSum  - kd * dInput;
+      output = clamp(output, outputMin, outputMax);
 
       /*Remember some variables for next time*/
       this->lastInput = input;
-	  return output;
+      return output;
 }
 
 /** Note: ki and kd must be normalized to the sampling time

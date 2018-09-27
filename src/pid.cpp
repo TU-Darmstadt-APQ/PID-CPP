@@ -45,14 +45,10 @@ const uint32_t PID::compute(const uint32_t input) {
       double dInput = (input - this->previousInput);
       this->errorSum += (ki * error);
 
-      this->errorSum = clamp(errorSum, outputMin, outputMax);
+      this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
 
-      /*Add Proportional on Error, if P_ON_E is specified*/
-      double output = kp * error;
-
-      /*Compute Rest of PID Output*/
-      output += this->errorSum  - kd * dInput;
-      output = clamp(output, outputMin, outputMax);
+      output = kp * error + this->errorSum  - kd * dInput;
+      output = clamp(output, this->outputMin, this->outputMax);
 
       /*Remember some variables for next time*/
       this->previousInput = input;

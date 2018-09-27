@@ -40,42 +40,25 @@ PID::PID(const uint32_t setpoint, const double kp, const double ki, const double
       parameters used in the multiplications. The encoding is Offset Binary, so it directly be fed to most DACs.
 */
 const uint32_t PID::compute(const uint32_t input) {
-    // Calcualte P term
-    // Note: the calculation is (uint32_t)setpoint - (uint32_t)(input) = (int32_t)error (using signed math)
-    // This is true for offset binary values!
-    const double error = this->setpoint - input;
-    // Calcualte I term
-    // TODO: Think about taking into account the previous result as well
-    // -> Bilinear Transform instead of Backward difference
-    // https://en.wikipedia.org/wiki/Bilinear_transform
-    errorSum += this->ki * error;
-    // Calculate D term (Note: We actually calcualte -dInput)
-    // We do not calculate dError, because this would cause an output spike every time someone changes the setpoint
-    // dError = d(Setpoint - Input)_n - d(Setpoint - Input)_(n-1)
-    //        = dSetpoint - dInput
-    // We would like to get rid of the setpoint dependence and during normal operation, there is no difference
-    //        ≈ -dInput
-    const double dInputNegative = this->previousInput - input;
+      /*Compute all the working error variables*/
+      double error = this->setPoint - input;
+      double dInput = (input - lastInput);
+      this->errorSum+= (ki * error);
 
-    // Store the input to calculate the D-term next time
-    this->previousInput = input;
+      this->errorSum = clamp(errorSum, outputMin, outputMax);
 
-    if (UNLIKELY(proportionalGain == proportionalToInput)) {
-        errorSum += this->kp * dInputNegative;
-    }
+      /*Add Proportional on Error, if P_ON_E is specified*/
+	   double output;
+      output = kp * error;
 
-    // This will prevent integral windup
-    this->errorSum = clamp(errorSum, outputMin, outputMax);
+      /*Compute Rest of PID Output*/
+      output += outputSum - kd * dInput;
 
-    double output = errorSum + this->kd * dInputNegative;
+	  output = clamp(output, outputMin, outputMax);
 
-    // Normal PID
-    if (LIKELY(proportionalGain == proportionalToError)) {
-        output += this->kp * error;
-    }
-
-    output = clamp(output, outputMin, outputMax);
-    return (uint32_t)output;
+      /*Remember some variables for next time*/
+      this->lastInput = input;
+	  return output;
 }
 
 /** Note: ki and kd must be normalized to the sampling time

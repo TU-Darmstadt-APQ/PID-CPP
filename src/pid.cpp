@@ -47,7 +47,7 @@ const uint32_t PID::compute(const uint32_t input) {
 
       this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
 
-      double output = kp * error + outputSum// - kd * dInput;;
+      double output = kp * error + 2048 //outputSum// - kd * dInput;;
       output = clamp(output, this->outputMin, this->outputMax);
 
       /*Remember some variables for next time*/

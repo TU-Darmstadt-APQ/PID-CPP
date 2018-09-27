@@ -6,8 +6,8 @@
 #define LIKELY(x)       __builtin_expect(!!(x), 1)
 #define UNLIKELY(x)     __builtin_expect(!!(x), 0)
 
-static inline const int32_t clamp(const int32_t value, const int32_t min, const int32_t max) __attribute__((always_inline, unused));
-static inline const int32_t clamp(const int32_t value, const int32_t min, const int32_t max) {
+static inline const int32_t clamp(const double value, const double min, const double max) __attribute__((always_inline, unused));
+static inline const int32_t clamp(const double value, const double min, const double max) {
     return (value < min) ? min : (value > max) ? max : value;
 }
 /* The instruction sets for different ARM processors can be found here
@@ -106,17 +106,17 @@ enum ProportionalGain {
 
 class PID {
     public:
-        PID(const uint32_t setpoint, const int32_t kp, const int32_t ki, const int32_t kd, uint8_t _qn, FeedbackDirection feedbackDirection, ProportionalGain proportionalGain);
-        PID(const uint32_t setpoint, const int32_t kp, const int32_t ki, const int32_t kd, uint8_t _qn, FeedbackDirection feedbackDirection);
-        PID(const uint32_t setpoint, const int32_t kp, const int32_t ki, const int32_t kd, uint8_t _qn);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection feedbackDirection, ProportionalGain proportionalGain);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection feedbackDirection);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn);
 
         const uint32_t compute(uint32_t input);
 
         void setTunings(const int32_t kp, const int32_t ki, const int32_t kd);
         void setTunings(const int32_t kp, const int32_t ki, const int32_t kd, const ProportionalGain proportionalGain);
-        const uint32_t getKp();
-        const uint32_t getKi();
-        const uint32_t getKd();
+        const double getKp();
+        const double getKi();
+        const double getKd();
         void setSetpoint(const uint32_t value);
         const uint32_t getSetpoint();
         void setControllerFeedback(const FeedbackDirection feedbackDirection);
@@ -125,16 +125,16 @@ class PID {
         void updateOutput(const uint32_t value);
         void init(const uint32_t initialInput);
     private:
-        int32_t kp, ki, kd;
+        double kp, ki, kd;
         FeedbackDirection feedbackDirection;
         ProportionalGain proportionalGain;
         uint8_t qn;
         int32_t outputMin = INT32_MIN;
         int32_t outputMax = INT32_MAX;
-        int32_t previousInput = 0;
-        int32_t errorSum = 0;
+        uint32_t previousInput = 0;
+        double errorSum = 0;
     protected:
-        int32_t setpoint;
+        uint32_t setpoint;
 };
 #endif
 

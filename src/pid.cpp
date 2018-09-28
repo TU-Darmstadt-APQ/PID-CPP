@@ -41,13 +41,12 @@ PID::PID(const uint32_t setpoint, const double kp, const double ki, const double
 */
 const uint32_t PID::compute(const uint32_t input) {
       double error = (double)(this->setpoint) - (double)input;
-      double dInput = (double)input - (double)(this->prevoiusInput));
+      double dInput = (double)input - (double)(this->previousInput);
       this->errorSum+= (ki * error);
       this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
 
-      double output = kp * error + this->errorSum - kd * dInput;
+      double output = this->kp * error + this->errorSum - this->kd * dInput;
       output = clamp(output, this->outputMin, this->outputMax);
-
       this->previousInput = input;
       return output;
 }

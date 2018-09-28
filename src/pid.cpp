@@ -40,17 +40,14 @@ PID::PID(const uint32_t setpoint, const double kp, const double ki, const double
       parameters used in the multiplications. The encoding is Offset Binary, so it directly be fed to most DACs.
 */
 const uint32_t PID::compute(const uint32_t input) {
-      /*Compute all the working error variables*/
       double error = (double)(this->setpoint) - (double)input;
       double dInput = (double)input - (double)(this->prevoiusInput));
-      //this->errorSum+= (ki * error);
-
+      this->errorSum+= (ki * error);
       this->errorSum = clamp(this->errorSum, this->outputMin, this->outputMax);
 
-      double output = kp * error + 2048 //outputSum// - kd * dInput;;
+      double output = kp * error + this->errorSum - kd * dInput;
       output = clamp(output, this->outputMin, this->outputMax);
 
-      /*Remember some variables for next time*/
       this->previousInput = input;
       return output;
 }
@@ -70,11 +67,11 @@ void PID::setTunings(const double kp, const double ki, const double kd) {
 }
 
 void PID::setOutputMin(const uint32_t value) {
-    this->outputMin = value;    // Convert from Offset Binary to Integer
+    this->outputMin = value;
 }
 
 void PID::setOutputMax(const uint32_t value) {
-    this->outputMax = value;    // Convert from Offset Binary to Integer
+    this->outputMax = value;
 }
 
 void PID::setSetpoint(const uint32_t value) {

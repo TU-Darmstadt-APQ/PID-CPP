@@ -14,7 +14,7 @@
  */
 
 #include <stdlib.h>   // abs()
-#include <Arduino.h>
+#include <Arduino.h>		// Added this library to avoid using a precompiled library version on windows
 #include "pid.h"
 
 PID::PID(const uint32_t _setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection _feedbackDirection, ProportionalGain proportionalGain)

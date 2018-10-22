@@ -40,7 +40,7 @@ PID::PID(const uint32_t setpoint, const double kp, const double ki, const double
     @param *output The output in Q(DAC_resolution).0 format and is determinded by the ki, kp, kd
       parameters used in the multiplications. The encoding is Offset Binary, so it directly be fed to most DACs.
 */
-const uint32_t PID::compute(const uint32_t input) {
+const uint32_t PID::compute(const int32_t input) {
       double error = (double)(this->setpoint) - (double)input;
       double dInput = (double)input - (double)(this->previousInput);
       this->errorSum+= (this->ki * error);

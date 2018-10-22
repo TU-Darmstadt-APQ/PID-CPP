@@ -27,7 +27,7 @@ class PID {
         PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection feedbackDirection);
         PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn);
 
-        const uint32_t compute(uint32_t input);
+        const uint32_t compute(int32_t input);
 
         void setTunings(const double kp, const double ki, const double kd);
         void setTunings(const double kp, const double ki, const double kd, const ProportionalGain proportionalGain);

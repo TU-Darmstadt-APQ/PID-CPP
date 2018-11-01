@@ -52,6 +52,10 @@ const uint32_t PID::compute(const int32_t input) {
       return output;
 }
 
+const double PID::getInput() {
+    return this->previousInput;
+}
+
 /** Note: ki and kd must be normalized to the sampling time
  */
 void PID::setTunings(const double kp, const double ki, const double kd, const ProportionalGain proportionalGain) {

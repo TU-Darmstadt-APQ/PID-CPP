@@ -2,6 +2,8 @@
 #define PID_H
 
 #include <stdint.h>
+#include "../../FSM/fsm_pid.hpp"
+#include "../../FSM/interface.h"
 
 #define LIKELY(x)       __builtin_expect(!!(x), 1)
 #define UNLIKELY(x)     __builtin_expect(!!(x), 0)
@@ -21,11 +23,11 @@ enum ProportionalGain {
     proportionalToError = 1,
 };
 
-class PID {
+class PID : public pidInterface {
     public:
-        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection feedbackDirection, ProportionalGain proportionalGain);
-        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection feedbackDirection);
-        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t _qn);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, FeedbackDirection feedbackDirection, ProportionalGain proportionalGain);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd, FeedbackDirection feedbackDirection);
+        PID(const uint32_t setpoint, const double kp, const double ki, const double kd);
 
         const uint32_t compute(int32_t input);
         const double getInput();
@@ -42,15 +44,19 @@ class PID {
         void setOutputMax(const uint32_t value);
         void updateOutput(const uint32_t value);
         void init(const uint32_t initialInput);
+		
+		const uint32_t computeEMAFilter(int32_t input);
+		
     private:
         double kp, ki, kd;
         FeedbackDirection feedbackDirection;
         ProportionalGain proportionalGain;
-        uint8_t qn;
         int32_t outputMin = INT32_MIN;
         int32_t outputMax = INT32_MAX;
         uint32_t previousInput = 0;
         double errorSum = 0;
+		double emaParameter = 1;
+		double filteredValue;
     protected:
         uint32_t setpoint;
 };

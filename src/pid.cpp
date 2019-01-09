@@ -17,16 +17,17 @@
 #include <Arduino.h>		// Added this library to avoid using a precompiled library version on windows
 #include "pid.h"
 
-PID::PID(const uint32_t _setpoint, const double kp, const double ki, const double kd, uint8_t _qn, FeedbackDirection _feedbackDirection, ProportionalGain proportionalGain)
-    : feedbackDirection(_feedbackDirection), qn(_qn), setpoint(_setpoint) {
+PID::PID(const uint32_t _setpoint, const double kp, const double ki, const double kd, FeedbackDirection _feedbackDirection, ProportionalGain proportionalGain)
+    : feedbackDirection(_feedbackDirection), setpoint(_setpoint) {
     this->setTunings(kp, ki, kd, proportionalGain);
+	PIDFsm::pid = this;
 }
 
-PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t qn, FeedbackDirection feedbackDirection)
-    :PID::PID(setpoint, kp, ki, kd, qn, feedbackDirection, proportionalToError) {}
+PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd, FeedbackDirection feedbackDirection)
+    :PID::PID(setpoint, kp, ki, kd, feedbackDirection, proportionalToError) {PIDFsm::pid = this;}
 
-PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd, uint8_t qn)
-    :PID::PID(setpoint, kp, ki, kd, qn, feedbackNegative) {}
+PID::PID(const uint32_t setpoint, const double kp, const double ki, const double kd)
+    :PID::PID(setpoint, kp, ki, kd, feedbackNegative) {PIDFsm::pid = this;}
 
 /**
     Calculate a new output and store update all internal state variables. Note: The input is a simple number without
@@ -50,6 +51,11 @@ const uint32_t PID::compute(const int32_t input) {
       output = clamp(output, this->outputMin, this->outputMax);
       this->previousInput = input;
       return output;
+}
+
+const uint32_t PID::computeEMAFilter(const int32_t input){
+	this->filteredValue += (input - this->filteredValue) * this->emaParameter;
+    return this->compute((int32_t)this->filteredValue);
 }
 
 const double PID::getInput() {

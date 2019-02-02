@@ -34,6 +34,9 @@ class PID : public pidInterface {
 
         void setTunings(const double kp, const double ki, const double kd);
         void setTunings(const double kp, const double ki, const double kd, const ProportionalGain proportionalGain);
+		void setKp(double newParameter);
+		void setKi(double newParameter);
+		void setKd(double newParameter);
         const double getKp();
         const double getKi();
         const double getKd();
@@ -44,6 +47,10 @@ class PID : public pidInterface {
         void setOutputMax(const uint32_t value);
         void updateOutput(const uint32_t value);
         void init(const uint32_t initialInput);
+		
+		void setFeedbackDirection(bool directionOfFeedback);
+		void setGain(bool gain);
+		void updateTunings();
 		
 		const uint32_t computeEMAFilter(int32_t input);
 		

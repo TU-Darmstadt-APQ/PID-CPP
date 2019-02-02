@@ -106,6 +106,17 @@ void PID::setControllerFeedback(const FeedbackDirection feedbackDirection) {
   this->setTunings(this->kp, this->ki, this->kd);
 }
 
+void PID::setKp(double newParameter){
+	this->kp = newParameter;
+}
+void PID::setKi(double newParameter){
+	this->ki = newParameter;
+}
+
+void PID::setKd(double newParameter){
+	this->kd = newParameter;
+}
+
 const double PID::getKp() {
     return this->kp;
 }
@@ -118,3 +129,16 @@ const double PID::getKd() {
     return this->kd;
 }
 
+void PID::setFeedbackDirection(bool directionOfFeedback){
+	if(directionOfFeedback) this->feedbackDirection = feedbackPositive;
+	else this->feedbackDirection = feedbackNegative;
+}
+
+void PID::setGain(bool gain){
+	if(gain) this->proportionalGain = proportionalToError;
+	else this->proportionalGain = proportionalToInput;
+}
+
+void PID::updateTunings(){
+	this->setTunings(this->kp, this->ki, this->kd);
+}

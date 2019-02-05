@@ -62,7 +62,7 @@ class PID : public pidInterface {
         int32_t outputMax = INT32_MAX;
         uint32_t previousInput = 0;
         double errorSum = 0;
-		double emaParameter = 1;
+		double emaParameter = 0.1;
 		double filteredValue;
     protected:
         uint32_t setpoint;

@@ -54,8 +54,10 @@ const uint32_t PID::compute(const int32_t input) {
 }
 
 const uint32_t PID::computeEMAFilter(const int32_t input){
-	this->filteredValue += (input - this->filteredValue) * this->emaParameter;
-    return this->compute((int32_t)this->filteredValue);
+	if(input > 0){
+		this->filteredValue += (input - this->filteredValue) * this->emaParameter;
+	}
+	return this->compute((int32_t)this->filteredValue);
 }
 
 const double PID::getInput() {
@@ -132,11 +134,13 @@ const double PID::getKd() {
 void PID::setFeedbackDirection(bool directionOfFeedback){
 	if(directionOfFeedback) this->feedbackDirection = feedbackPositive;
 	else this->feedbackDirection = feedbackNegative;
+	this->setTunings(this->kp, this->ki, this->kd);
 }
 
 void PID::setGain(bool gain){
 	if(gain) this->proportionalGain = proportionalToError;
 	else this->proportionalGain = proportionalToInput;
+	this->setTunings(this->kp, this->ki, this->kd);
 }
 
 void PID::updateTunings(){

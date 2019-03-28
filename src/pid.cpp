@@ -54,9 +54,7 @@ const uint32_t PID::compute(const int32_t input) {
 }
 
 const uint32_t PID::computeEMAFilter(const int32_t input){
-	if(input > 0){
-		this->filteredValue += (input - this->filteredValue) * this->emaParameter;
-	}
+	this->filteredValue += (input - this->filteredValue) * this->emaParameter;
 	return this->compute((int32_t)this->filteredValue);
 }
 
